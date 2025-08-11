@@ -11,7 +11,7 @@ const app = express();
 
 // 🌐 Middlewares
 app.use(cors({
-  origin: 'https://mynewlife-frontend.vercel.app',
+  origin: 'https://my-new-life-sand.vercel.app',
   credentials: true
 }));
 
