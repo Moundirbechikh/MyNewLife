@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState,useEffect } from 'react';
 import '../index.css';
 import Navbar from '../components/Navbar';
 import Citation from '../components/Citation';
@@ -6,6 +6,10 @@ import Object from '../components/Object';
 import Info from '../components/Info';
 import AnimatedSection from '../components/AnimatedSection';
 import Footerbase from '../components/footerbase';
+
+useEffect(() => {
+  console.log('API URL:', process.env.REACT_APP_API_URL);
+}, []);
 
 function PagePrincipal() {
   const [theme, setTheme] = useState('lime');
