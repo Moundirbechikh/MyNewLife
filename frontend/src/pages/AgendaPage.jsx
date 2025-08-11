@@ -14,7 +14,7 @@ function AgendaPage() {
   useEffect(() => {
     const fetchObjectives = async () => {
       try {
-        const res = await fetch('https://mynewlife.onrender.com/api/objectives', {
+        const res = await fetch('${process.env.REACT_APP_API_URL}/api/objectives', {
           headers: {
             Authorization: `Bearer ${localStorage.getItem('token')}`,
           },
