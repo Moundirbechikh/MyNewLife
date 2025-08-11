@@ -14,7 +14,6 @@ app.use(cors({
   origin: 'https://my-new-life-sand.vercel.app',
   credentials: true
 }));
-
 app.use(express.json());
 
 // 📦 Routes
@@ -24,7 +23,19 @@ const objectiveRoutes = require("./Routes/objective");
 app.use("/api/users", userRoutes);
 app.use("/api/objectives", objectiveRoutes);
 
-// 🌍 Connexion à MongoDB
+// ✅ Route d’accueil pour test Render
+app.get('/', (req, res) => {
+  res.send(`
+    <h1>🚀 Backend opérationnel</h1>
+    <p>Endpoints disponibles :</p>
+    <ul>
+      <li><a href="/api/users">/api/users</a></li>
+      <li><a href="/api/objectives">/api/objectives</a></li>
+    </ul>
+  `);
+});
+
+// 🌍 Connexion à MongoDB + lancement du serveur
 mongoose.connect(process.env.MONGODB_URI, {
   useNewUrlParser: true,
   useUnifiedTopology: true,
