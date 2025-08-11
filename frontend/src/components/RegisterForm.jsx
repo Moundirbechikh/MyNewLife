@@ -40,7 +40,7 @@ function RegisterForm({ theme = 'lime' }) {
     }
 
     try {
-      const response = await fetch('https://mynewlife.onrender.com/api/users/register', {
+      const response = await fetch(`${process.env.REACT_APP_API_URL}/api/users/register`, {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify(formData),
@@ -69,11 +69,11 @@ function RegisterForm({ theme = 'lime' }) {
   };
 
   return (
-    <div className={`max-w-xl mx-auto p-8 rounded-xl shadow-2xl ${bgColor}`}>
-      <h2 className="text-4xl font-bold mb-6 text-center text-black">Créer un compte</h2>
+    <div className={`max-w-xl mx-auto p-6 sm:p-8 rounded-xl shadow-2xl ${bgColor}`}>
+      <h2 className="text-3xl sm:text-4xl font-bold mb-6 text-center text-black">Créer un compte</h2>
       {message && <p className="text-center text-red-600 font-semibold mb-4">{message}</p>}
       <form onSubmit={handleSubmit} className="flex flex-col gap-4 text-sm">
-        <div className="flex gap-4">
+        <div className="flex flex-col sm:flex-row gap-4">
           <InputField icon={<FaUser />} name="nom" placeholder="Nom" value={formData.nom} onChange={handleChange} inputBg={inputBg} />
           <InputField icon={<FaUser />} name="prenom" placeholder="Prénom" value={formData.prenom} onChange={handleChange} inputBg={inputBg} />
         </div>
@@ -102,7 +102,7 @@ function InputField({ icon, name, type = 'text', placeholder, value, onChange, i
         placeholder={placeholder}
         value={value}
         onChange={onChange}
-        className="flex-1 outline-none bg-transparent text-black placeholder-black"
+        className="flex-1 outline-none bg-transparent text-black placeholder-black text-sm sm:text-base"
       />
     </div>
   );
@@ -112,7 +112,7 @@ function SelectField({ icon, name, value, onChange, options, inputBg }) {
   return (
     <div className={`flex items-center gap-2 rounded p-2 ${inputBg}`}>
       <span className="text-black">{icon}</span>
-      <select name={name} value={value} onChange={onChange} className="flex-1 bg-transparent text-black outline-none">
+      <select name={name} value={value} onChange={onChange} className="flex-1 bg-transparent text-black outline-none text-sm sm:text-base">
         <option value="">{name.charAt(0).toUpperCase() + name.slice(1)}</option>
         {options.map(opt => (
           <option key={opt} value={opt.toLowerCase()}>{opt}</option>
