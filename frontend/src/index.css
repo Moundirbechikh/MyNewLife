@@ -1,0 +1,36 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+.clip-hexagon {
+  clip-path: polygon(
+    25% 5%, 75% 5%, 
+    100% 50%, 75% 95%, 
+    25% 95%, 0% 50%
+  );
+}
+.clip-diagonal {
+  clip-path: polygon(60% 0%, 100% 0%, 100% 100%, 35% 100%);
+  -webkit-clip-path: polygon(60% 0%, 100% 0%, 100% 100%, 35% 100%);
+  backface-visibility: hidden;
+  transform: translateZ(0);
+}
+@layer utilities {
+  .animate-fade-in {
+    animation: fadeIn 0.5s ease-out;
+  }
+
+  .animate-day-entry {
+    animation: dayEntry 0.4s ease-out forwards;
+    opacity: 0;
+    transform: scale(0.95);
+  }
+
+  @keyframes fadeIn {
+    from { opacity: 0; transform: translateY(10px); }
+    to { opacity: 1; transform: translateY(0); }
+  }
+
+  @keyframes dayEntry {
+    to { opacity: 1; transform: scale(1); }
+  }
+}
