@@ -1,4 +1,4 @@
-import React, { useState,useEffect } from 'react';
+import React, { useState, useEffect } from 'react';
 import '../index.css';
 import Navbar from '../components/Navbar';
 import Citation from '../components/Citation';
@@ -7,12 +7,16 @@ import Info from '../components/Info';
 import AnimatedSection from '../components/AnimatedSection';
 import Footerbase from '../components/footerbase';
 
-useEffect(() => {
-  console.log('API URL:', process.env.REACT_APP_API_URL);
-}, []);
-
 function PagePrincipal() {
   const [theme, setTheme] = useState('lime');
+
+  useEffect(() => {
+    console.log('✅ REACT_APP_API_URL =', process.env.REACT_APP_API_URL);
+
+    if (!process.env.REACT_APP_API_URL) {
+      console.warn('⚠️ La variable REACT_APP_API_URL est undefined. Vérifie Vercel et redeploie.');
+    }
+  }, []);
 
   return (
     <div className={`${theme === 'lime' ? 'bg-lime-100' : 'bg-purple-100'} min-h-screen`}>
