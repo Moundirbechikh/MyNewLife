@@ -59,8 +59,8 @@ function ObjectiveForm({ onAdd, onUpdate, theme, initialData }) {
     };
 
     const url = editingId
-      ? `http://localhost:5000/api/objectives/update/${editingId}`
-      : 'http://localhost:5000/api/objectives';
+      ? `${process.env.REACT_APP_API_URL}/api/objectives/update/${editingId}`
+      : '${process.env.REACT_APP_API_URL}/api/objectives';
 
     const method = editingId ? 'PUT' : 'POST';
 
