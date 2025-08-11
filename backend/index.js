@@ -11,7 +11,7 @@ const app = express();
 
 // 🌐 Middlewares
 app.use(cors({
-  origin: 'https://my-new-life-sand.vercel.app',
+  origin: 'http://localhost:3000',
   credentials: true
 }));
 app.use(express.json());
