@@ -10,7 +10,11 @@ require('./cronJobs');
 const app = express();
 
 // 🌐 Middlewares
-app.use(cors());
+app.use(cors({
+  origin: 'https://mynewlife-frontend.vercel.app',
+  credentials: true
+}));
+
 app.use(express.json());
 
 // 📦 Routes
