@@ -13,7 +13,7 @@ function ObjectivesPage() {
   useEffect(() => {
     const fetchObjectives = async () => {
       try {
-        const res = await fetch('http://localhost:5000/api/objectives', {
+        const res = await fetch('https://mynewlife.onrender.com/api/objectives', {
           headers: {
             Authorization: `Bearer ${localStorage.getItem('token')}`,
           },
