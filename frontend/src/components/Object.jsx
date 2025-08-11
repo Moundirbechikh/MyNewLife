@@ -57,7 +57,7 @@ const Object = ({ theme = 'lime' }) => {
 
   return (
     <div
-      className={`relative w-full max-w-md sm:max-w-lg md:max-w-2xl lg:max-w-4xl h-64 flex justify-center items-end mt-10 transition-all duration-700 ease-out transform ${
+      className={`relative w-full max-w-sm sm:max-w-lg md:max-w-2xl lg:max-w-4xl h-64 flex justify-center items-end mt-10 transition-all duration-700 ease-out transform ${
         visible ? 'opacity-100 translate-y-0 scale-100' : 'opacity-0 translate-y-10 scale-95'
       }`}
     >
@@ -70,9 +70,9 @@ const Object = ({ theme = 'lime' }) => {
               position === 'center'
                 ? 'scale-100 z-10 opacity-100'
                 : position === 'left'
-                ? 'translate-x-[-150px] scale-90 z-0 opacity-50'
+                ? 'translate-x-[-120px] md:translate-x-[-150px] scale-90 z-0 opacity-50'
                 : position === 'right'
-                ? 'translate-x-[150px] scale-90 z-0 opacity-50'
+                ? 'translate-x-[120px] md:translate-x-[150px] scale-90 z-0 opacity-50'
                 : 'opacity-0 pointer-events-none'
             }`}
             onClick={() => setIndex(i)}
