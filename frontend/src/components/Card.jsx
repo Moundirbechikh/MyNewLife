@@ -22,7 +22,7 @@ function Card({ title, theme = 'lime', level = 400, className = '', objectives =
 
   return (
     <div
-      className={`w-48 sm:w-80 min-h-80 h-fit rounded-xl shadow-xl flex flex-col items-center ${
+      className={`w-32 sm:w-80 min-h-80 h-fit rounded-xl shadow-xl flex flex-col items-center ${
         isLoggedIn ? 'justify-between' : 'justify-center'
       } py-6 px-4 text-black ${bgColor} ${className}`}
     >
@@ -36,7 +36,7 @@ function Card({ title, theme = 'lime', level = 400, className = '', objectives =
                 key={obj._id}
                 className={`w-full rounded-lg px-4 py-3 flex flex-col items-center justify-center text-center shadow-md hover:scale-[1.03] hover:bg-white transition-all duration-300 ${blockBgColor}`}
               >
-                <div className="text-sm sm:text-lg font-semibold text-gray-800">{obj.title}</div>
+                <div className="text-xs sm:text-lg font-semibold text-gray-800">{obj.title}</div>
                 <div className="mt-1 text-sm font-medium text-gray-600">
                   {obj.category === 'weekly' ? (
                     <span>{obj.progress || 0}/{obj.frequency || 1}</span>
