@@ -18,7 +18,7 @@ function Card({ title, theme = 'lime', level = 400, className = '', objectives =
 
   const filtered = objectives
     .filter((obj) => obj.category === category)
-    .slice(0, 2);
+    .slice(0, 1);
 
   return (
     <div
