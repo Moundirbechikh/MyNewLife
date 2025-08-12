@@ -21,21 +21,21 @@ function Card({ title, theme = 'lime', level = 400, className = '', objectives =
     return () => window.removeEventListener('resize', handleResize);
   }, []);
 
-  const categories = ['daily', 'weekly', 'monthly'];
-  const currentCategory = title.toLowerCase().includes('daily')
+  const category = title.toLowerCase().includes('daily')
     ? 'daily'
     : title.toLowerCase().includes('weekly')
     ? 'weekly'
     : 'monthly';
 
-  const otherCategories = categories.filter((cat) => cat !== currentCategory);
+  const categoryObjectives = objectives.filter((obj) => obj.category === category);
 
-  const currentObjectives = objectives.filter((obj) => obj.category === currentCategory);
-  const secondaryObjectives = objectives.filter((obj) => obj.category === otherCategories[0]);
+  // 🎲 Fonction pour choisir aléatoirement n éléments
+  const getRandomObjectives = (list, count) => {
+    const shuffled = [...list].sort(() => 0.5 - Math.random());
+    return shuffled.slice(0, count);
+  };
 
-  const displayedObjectives = isMobile
-    ? currentObjectives.slice(0, 1)
-    : [...currentObjectives.slice(0, 1), ...secondaryObjectives.slice(0, 1)];
+  const displayedObjectives = getRandomObjectives(categoryObjectives, isMobile ? 1 : 2);
 
   return (
     <div
@@ -72,17 +72,9 @@ function Card({ title, theme = 'lime', level = 400, className = '', objectives =
           )}
 
           {/* 🔘 Indicateurs si d'autres objectifs existent */}
-          {!isMobile && (currentObjectives.length > 1 || secondaryObjectives.length > 1) && (
+          {categoryObjectives.length > displayedObjectives.length && (
             <div className="flex justify-center gap-1 mt-2">
-              {[...Array(currentObjectives.length - 1 + secondaryObjectives.length - 1)].map((_, i) => (
-                <span key={i} className="w-2 h-2 rounded-full bg-gray-400 opacity-50"></span>
-              ))}
-            </div>
-          )}
-
-          {isMobile && currentObjectives.length > 1 && (
-            <div className="flex justify-center gap-1 mt-2">
-              {[...Array(currentObjectives.length - 1)].map((_, i) => (
+              {[...Array(categoryObjectives.length - displayedObjectives.length)].map((_, i) => (
                 <span key={i} className="w-2 h-2 rounded-full bg-gray-400 opacity-50"></span>
               ))}
             </div>
