@@ -18,8 +18,8 @@ function Info({ theme = 'lime', level = 500 }) {
   const isLoggedIn = !!user;
 
   return (
-    <div className="pt-20 pb-20 flex flex-col justify-center gap-6" id="info">
-      <div className="flex flex-wrap justify-center gap-10 flex-row">
+    <div className="pt-20 pb-20 flex flex-col justify-center md:gap-6 gap-3" id="info">
+      <div className="flex flex-wrap justify-center md:gap-10 gap-5 flex-row">
         <Infocard
           title="Objectifs Quotidiens"
           discription="Définissez et suivez vos objectifs jour par jour pour une progression constante."
@@ -35,7 +35,7 @@ function Info({ theme = 'lime', level = 500 }) {
           Icon={FaRegCalendarAlt}
         />
       </div>
-      <div className="flex flex-wrap justify-center gap-10 flex-row">
+      <div className="flex flex-wrap justify-center md:gap-10 gap-5 flex-row">
         <Infocard
           title="Objectifs Mensuels"
           discription="Fixez-vous des défis à long terme et suivez votre progression mensuelle."
