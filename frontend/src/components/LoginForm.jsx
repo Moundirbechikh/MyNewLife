@@ -59,7 +59,7 @@ function LoginForm({ theme = 'lime' }) {
   
 
   return (
-    <div className={`w-full max-w-2xl mx-auto mt-20 p-10 rounded-2xl shadow-2xl ${bgColor} transition-all duration-100`}>
+    <div className={`w-full max-w-xl se:max-w-2xl mx-auto mt-20 p-10 rounded-2xl shadow-2xl ${bgColor} transition-all duration-100`}>
       {message && (
         <p className="text-center font-semibold mb-4 text-black">
           {message}
