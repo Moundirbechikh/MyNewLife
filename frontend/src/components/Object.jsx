@@ -12,6 +12,7 @@ const Object = ({ theme = 'lime' }) => {
   const [index, setIndex] = useState(0);
   const [visible, setVisible] = useState(false);
   const [objectives, setObjectives] = useState([]);
+  const [isMobile, setIsMobile] = useState(false);
 
   const user = getUser();
   const isLoggedIn = !!user;
@@ -48,11 +49,25 @@ const Object = ({ theme = 'lime' }) => {
     }
   }, [isLoggedIn]);
 
+  useEffect(() => {
+    const handleResize = () => {
+      setIsMobile(window.innerWidth < 768); // md breakpoint
+    };
+    handleResize();
+    window.addEventListener('resize', handleResize);
+    return () => window.removeEventListener('resize', handleResize);
+  }, []);
+
   const getPosition = (i) => {
     if (i === index) return 'center';
     if (i === (index - 1 + cards.length) % cards.length) return 'left';
     if (i === (index + 1) % cards.length) return 'right';
     return 'hidden';
+  };
+
+  const getFilteredObjectives = (level) => {
+    const filtered = objectives.filter((obj) => obj.level === level);
+    return isMobile ? filtered.slice(0, 1) : filtered;
   };
 
   return (
@@ -63,21 +78,35 @@ const Object = ({ theme = 'lime' }) => {
     >
       {cards.map((card, i) => {
         const position = getPosition(i);
+        const base = 'absolute transition-all duration-700';
+
+        let positionClasses = '';
+        if (position === 'center') {
+          positionClasses = 'scale-100 z-10 opacity-100';
+        } else if (position === 'left') {
+          positionClasses = isMobile
+            ? 'scale-[0.4] opacity-10 -translate-x-20 pointer-events-none'
+            : 'scale-90 opacity-50 -translate-x-[150px] md:-translate-x-[180px] z-0';
+        } else if (position === 'right') {
+          positionClasses = isMobile
+            ? 'scale-[0.4] opacity-10 translate-x-20 pointer-events-none'
+            : 'scale-90 opacity-50 translate-x-[150px] md:translate-x-[180px] z-0';
+        } else {
+          positionClasses = 'opacity-0 pointer-events-none';
+        }
+
         return (
           <div
             key={card.id}
-            className={`absolute transition-all duration-700 cursor-pointer ${
-              position === 'center'
-                ? 'scale-100 z-10 opacity-100'
-                : position === 'left'
-                ? 'translate-x-[-120px] md:translate-x-[-150px] scale-90 z-0 opacity-50'
-                : position === 'right'
-                ? 'translate-x-[120px] md:translate-x-[150px] scale-90 z-0 opacity-50'
-                : 'opacity-0 pointer-events-none'
-            }`}
-            onClick={() => setIndex(i)}
+            className={`${base} ${positionClasses}`}
+            onClick={() => position === 'center' && setIndex(i)}
           >
-            <Card title={card.title} theme={theme} level={card.level} objectives={objectives} />
+            <Card
+              title={card.title}
+              theme={theme}
+              level={card.level}
+              objectives={getFilteredObjectives(card.level)}
+            />
           </div>
         );
       })}
