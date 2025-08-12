@@ -51,7 +51,7 @@ function ObjectivesPage() {
   // 🗑️ Supprimer un objectif
   const handleDelete = async (obj) => {
     try {
-      const res = await fetch(`http://localhost:5000/api/objectives/${obj._id}`, {
+      const res = await fetch(`https://mynewlife.onrender.com/api/objectives/${obj._id}`, {
         method: 'DELETE',
         headers: {
           Authorization: `Bearer ${localStorage.getItem('token')}`,
