@@ -22,7 +22,7 @@ function Card({ title, theme = 'lime', level = 400, className = '', objectives =
 
   return (
     <div
-      className={`w-48 sm:w-80 min-h-80 h-fit rounded-xl shadow-xl flex flex-col items-center ${
+      className={`w-42 se:w-48 sm:w-80 min-h-80 h-fit rounded-xl shadow-xl flex flex-col items-center ${
         isLoggedIn ? 'justify-between' : 'justify-center'
       } py-6 px-4 text-black ${bgColor} ${className}`}
     >
