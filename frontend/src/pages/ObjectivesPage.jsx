@@ -13,7 +13,7 @@ function ObjectivesPage() {
   useEffect(() => {
     const fetchObjectives = async () => {
       try {
-        const res = await fetch('https://mynewlife.onrender.com/api/objectives', {
+        const res = await fetch('http://localhost:5000/api/objectives', {
           headers: {
             Authorization: `Bearer ${localStorage.getItem('token')}`,
           },
@@ -72,7 +72,7 @@ function ObjectivesPage() {
   // ✅ Valider un objectif
   const handleToggle = async (obj) => {
     try {
-      const res = await fetch(`http://localhost:5000/api/objectives/${obj._id}/validate`, {
+      const res = await fetch(`https://mynewlife.onrender.com/api/objectives/${obj._id}/validate`, {
         method: 'PATCH',
         headers: {
           'Content-Type': 'application/json',
@@ -132,7 +132,7 @@ function ObjectivesPage() {
       <div className="max-w-4xl mx-auto px-4 py-10">
         <h1 className="text-6xl font-bold text-center mb-8 text-black">🎯 Mes Objectifs</h1>
 
-        <div className="grid grid-cols-3 gap-4 text-center mb-10">
+        <div className="grid grid-cols-3 md:gap-4 gap-2 text-center mb-10 w-fit">
           {['daily', 'weekly', 'monthly'].map((cat) => (
             <div key={cat} className="bg-white rounded-lg shadow p-4">
               <h3 className="text-lg font-semibold capitalize">
