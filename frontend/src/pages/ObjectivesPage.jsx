@@ -132,10 +132,10 @@ function ObjectivesPage() {
       <div className="max-w-4xl mx-auto px-4 py-10">
         <h1 className="text-6xl font-bold text-center mb-8 text-black">🎯 Mes Objectifs</h1>
 
-        <div className="grid grid-cols-3 md:gap-4 gap-2 text-center mb-10 w-fit">
+        <div className="grid grid-cols-3 md:gap-4 gap-3 text-center mb-10">
           {['daily', 'weekly', 'monthly'].map((cat) => (
             <div key={cat} className="bg-white rounded-lg shadow p-4">
-              <h3 className="text-lg font-semibold capitalize">
+              <h3 className="text-base md:text-lg font-semibold capitalize">
                 {cat === 'daily' ? '🗓️ Quotidien' : cat === 'weekly' ? '📅 Hebdomadaire' : '🗓️ Mensuel'}
               </h3>
               <p className="text-gray-600">
