@@ -10,6 +10,9 @@ module.exports = {
         lobster: ['"Lobster"', 'cursive'],
         quicksand: ['"Quicksand"', 'sans-serif'],
       },
+      screens: {
+        se: '320px', // iPhone SE
+      },
     },
   },
   plugins: [],
