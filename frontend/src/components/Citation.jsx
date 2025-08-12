@@ -28,7 +28,7 @@ function Citation({ theme = 'lime' }) {
         </>
       ) : (
         <>
-          My <span className="text-black">new</span>{' '}
+          My <span className="text-black">New</span>{' '}
           <span className={`${getTextColor(theme, 300)}`}>Me !</span>
         </>
       )}
