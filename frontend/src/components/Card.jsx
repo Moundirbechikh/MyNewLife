@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useEffect, useState } from 'react';
 import { getBgColor } from '../theme/themeColors';
 import { getUser } from '../utils/storage';
 import { useNavigate } from 'react-router-dom';
@@ -10,15 +10,32 @@ function Card({ title, theme = 'lime', level = 400, className = '', objectives =
   const isLoggedIn = !!user;
   const navigate = useNavigate();
 
-  const category = title.toLowerCase().includes('daily')
+  const [isMobile, setIsMobile] = useState(false);
+
+  useEffect(() => {
+    const handleResize = () => {
+      setIsMobile(window.innerWidth < 768); // md breakpoint
+    };
+    handleResize();
+    window.addEventListener('resize', handleResize);
+    return () => window.removeEventListener('resize', handleResize);
+  }, []);
+
+  const categories = ['daily', 'weekly', 'monthly'];
+  const currentCategory = title.toLowerCase().includes('daily')
     ? 'daily'
     : title.toLowerCase().includes('weekly')
     ? 'weekly'
     : 'monthly';
 
-  const filtered = objectives
-    .filter((obj) => obj.category === category)
-    .slice(0, 1);
+  const otherCategories = categories.filter((cat) => cat !== currentCategory);
+
+  const currentObjectives = objectives.filter((obj) => obj.category === currentCategory);
+  const secondaryObjectives = objectives.filter((obj) => obj.category === otherCategories[0]);
+
+  const displayedObjectives = isMobile
+    ? currentObjectives.slice(0, 1)
+    : [...currentObjectives.slice(0, 1), ...secondaryObjectives.slice(0, 1)];
 
   return (
     <div
@@ -30,8 +47,8 @@ function Card({ title, theme = 'lime', level = 400, className = '', objectives =
 
       {isLoggedIn && (
         <div className="w-full mt-4 space-y-3 px-2 py-3 rounded-xl">
-          {filtered.length > 0 ? (
-            filtered.map((obj) => (
+          {displayedObjectives.length > 0 ? (
+            displayedObjectives.map((obj) => (
               <div
                 key={obj._id}
                 className={`w-full rounded-lg px-4 py-3 flex flex-col items-center justify-center text-center shadow-md hover:scale-[1.03] hover:bg-white transition-all duration-300 ${blockBgColor}`}
@@ -51,6 +68,23 @@ function Card({ title, theme = 'lime', level = 400, className = '', objectives =
           ) : (
             <div className="text-center text-sm text-gray-700 italic mt-6">
               Pas d’objectif pour le moment
+            </div>
+          )}
+
+          {/* 🔘 Indicateurs si d'autres objectifs existent */}
+          {!isMobile && (currentObjectives.length > 1 || secondaryObjectives.length > 1) && (
+            <div className="flex justify-center gap-1 mt-2">
+              {[...Array(currentObjectives.length - 1 + secondaryObjectives.length - 1)].map((_, i) => (
+                <span key={i} className="w-2 h-2 rounded-full bg-gray-400 opacity-50"></span>
+              ))}
+            </div>
+          )}
+
+          {isMobile && currentObjectives.length > 1 && (
+            <div className="flex justify-center gap-1 mt-2">
+              {[...Array(currentObjectives.length - 1)].map((_, i) => (
+                <span key={i} className="w-2 h-2 rounded-full bg-gray-400 opacity-50"></span>
+              ))}
             </div>
           )}
         </div>
