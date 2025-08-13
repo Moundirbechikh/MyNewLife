@@ -1,4 +1,4 @@
-import React, { useState,useEffect } from 'react';
+import React, { useState, useEffect } from 'react';
 import CalendarGrid from '../components/CalendarGrid';
 import DayObjectives from '../components/DayObjectives';
 import Navbar from '../components/Navbar';
@@ -40,9 +40,13 @@ function AgendaPage() {
         <h1 className="text-3xl font-bold text-center mb-4">📅 Mon Agenda</h1>
 
         <div className="flex justify-between items-center mb-6">
-          <button onClick={handlePrevMonth} className="text-lg font-medium hover:underline">← Mois précédent</button>
+          <button onClick={handlePrevMonth} className="text-lg font-medium hover:underline">
+            ← Mois précédent
+          </button>
           <span className="text-xl font-semibold">{format(currentMonth, 'MMMM yyyy')}</span>
-          <button onClick={handleNextMonth} className="text-lg font-medium hover:underline">Mois suivant →</button>
+          <button onClick={handleNextMonth} className="text-lg font-medium hover:underline">
+            Mois suivant →
+          </button>
         </div>
 
         <CalendarGrid
@@ -50,9 +54,9 @@ function AgendaPage() {
           onSelectDate={setSelectedDate}
           currentMonth={currentMonth}
           theme={theme}
-          objectives={objectives}
+          objectives={objectives} // si CalendarGrid en a besoin
         />
-        <DayObjectives date={selectedDate} />
+        <DayObjectives date={selectedDate} objectives={objectives} /> {/* Passe en props */}
       </div>
     </div>
   );
