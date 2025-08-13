@@ -3,7 +3,7 @@ const express = require("express");
 const mongoose = require("mongoose");
 const cors = require("cors");
 const path = require("path");
-require('./cronJobs');
+const checkObjectives = require('./checkObjectives');
 
 const app = express();
 
