@@ -5,7 +5,7 @@ const { format, differenceInCalendarDays, addDays, set } = require('date-fns');
 //
 // 🕘 1. À 23:59 → Enregistrement du statut "failed" si non validé
 //
-cron.schedule('44 01 * * *', async () => {
+cron.schedule('0 09 * * *', async () => {
   console.log('🕘 Cron daily evaluation triggered');
 
   try {
@@ -41,7 +41,7 @@ cron.schedule('44 01 * * *', async () => {
 //
 // 🕛 2. À 00:00 → Réinitialisation des objectifs daily
 //
-cron.schedule('45 01 * * *', async () => {
+cron.schedule('01 09 * * *', async () => {
   console.log('🕛 Cron daily reset triggered');
 
   try {
