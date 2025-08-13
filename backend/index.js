@@ -3,7 +3,7 @@ const express = require("express");
 const mongoose = require("mongoose");
 const cors = require("cors");
 const path = require("path");
-const checkObjectives = require('./checkObjectives');
+const checkObjectives = require('./checkObjectives'); // <- Vérification objectives
 
 const app = express();
 
@@ -43,6 +43,14 @@ mongoose.connect(process.env.MONGODB_URI, {
 
   const collections = await mongoose.connection.db.listCollections().toArray();
   console.log("📁 Collections disponibles :", collections.map(c => c.name));
+
+  // 🔥 Vérifie et met à jour les objectifs au démarrage
+  try {
+    await checkObjectives();
+    console.log("📌 Vérification des objectifs terminée au démarrage");
+  } catch (err) {
+    console.error("❌ Erreur lors de la vérification des objectifs :", err);
+  }
 
   const port = process.env.PORT || 5000;
   app.listen(port, () => {
