@@ -1,4 +1,4 @@
-const Objective = require('../Models/objective');
+const Objective = require('./Models/objective');
 const { format, differenceInCalendarDays, addDays, subDays, set } = require('date-fns');
 
 async function checkObjectives() {
