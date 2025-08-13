@@ -1,51 +1,22 @@
-import React, { useEffect, useState } from 'react';
+import React from 'react';
 import { format, differenceInCalendarDays } from 'date-fns';
+import { formatInTimeZone } from 'date-fns-tz';
 
-function DayObjectives({ date }) {
-  const [objectives, setObjectives] = useState([]);
+const TZ = 'Africa/Algiers';
 
-  useEffect(() => {
-    const fetchObjectives = async () => {
-      try {
-        const res = await fetch('https://mynewlife.onrender.com/api/objectives', {
-          headers: {
-            Authorization: `Bearer ${localStorage.getItem('token')}`,
-          },
-        });
-        const data = await res.json();
-        if (res.ok) setObjectives(data);
-      } catch (err) {
-        console.error('❌ Erreur chargement objectifs :', err);
-      }
-    };
+// Compare au jour près dans le fuseau Africa/Algiers
+const sameLocalDay = (d1, d2) =>
+  formatInTimeZone(new Date(d1), TZ, 'yyyy-MM-dd') ===
+  formatInTimeZone(new Date(d2), TZ, 'yyyy-MM-dd');
 
-    fetchObjectives();
-  }, []);
-
-  const isSameDay = (d1, d2) =>
-    format(new Date(d1), 'yyyy-MM-dd') === format(new Date(d2), 'yyyy-MM-dd');
-
-  const today = new Date(date);
-
-  const daily = objectives.filter((obj) =>
-    obj.category === 'daily' &&
-    obj.history.some((entry) => isSameDay(entry.date, date))
-  );
-
-  const weekly = objectives.filter((obj) =>
-    obj.category === 'weekly' &&
-    obj.history.some((entry) => isSameDay(entry.date, date))
-  );
-
-  const monthly = objectives.filter((obj) =>
-    obj.category === 'monthly' &&
-    obj.lastValidated &&
-    isSameDay(obj.lastValidated, date)
-  );
+function DayObjectives({ date, objectives = [] }) {
+  const daily = objectives.filter(o => o.category === 'daily');
+  const weekly = objectives.filter(o => o.category === 'weekly');
+  const monthly = objectives.filter(o => o.category === 'monthly');
 
   const historyForDay = objectives.flatMap((obj) =>
-    obj.history
-      .filter((entry) => isSameDay(entry.date, date))
+    (obj.history || [])
+      .filter((entry) => sameLocalDay(entry.date, date))
       .map((entry) => ({
         title: obj.title,
         category: obj.category,
@@ -56,6 +27,7 @@ function DayObjectives({ date }) {
   return (
     <div className="bg-white p-6 rounded-lg shadow-md mt-6">
       <h2 className="text-xl font-semibold mb-4">📌 Objectifs du {format(date, 'dd MMMM yyyy')}</h2>
+
       {daily.length || weekly.length || monthly.length ? (
         <div className="space-y-4">
           <ObjectiveList title="🗓️ Daily" items={daily} currentDate={date} />
@@ -92,59 +64,55 @@ function DayObjectives({ date }) {
 function ObjectiveList({ title, items, currentDate }) {
   if (!items || items.length === 0) return null;
 
-  const isSameDay = (d1, d2) =>
-    format(new Date(d1), 'yyyy-MM-dd') === format(new Date(d2), 'yyyy-MM-dd');
+  const now = new Date();
+  const relation = differenceInCalendarDays(now, new Date(currentDate)); // >0 passé, 0 aujourd'hui, <0 futur
 
   return (
     <div>
       <h3 className="font-bold text-lg mb-2">{title}</h3>
       <ul className="space-y-1">
         {items.map((item) => {
-          const created = new Date(item.createdAt);
-          const validated = item.lastValidated ? new Date(item.lastValidated) : null;
-          const today = new Date(currentDate);
+          const entry = (item.history || []).find((h) => sameLocalDay(h.date, currentDate));
 
           let label = '';
           let color = '';
           let icon = '';
 
           if (item.category === 'daily') {
-            const entry = item.history.find((h) => isSameDay(h.date, today));
-            if (entry?.status === 'completed') {
-              label = 'Validé';
-              color = 'text-green-600';
-              icon = '✅';
+            if (entry) {
+              if (entry.status === 'completed') { label = 'Validé'; color = 'text-green-600'; icon = '✅'; }
+              else if (entry.status === 'failed') { label = 'Non validé'; color = 'text-red-500'; icon = '❌'; }
             } else {
-              label = 'pas validé';
-              color = 'text-red-500';
-              icon = '❌';
+              if (relation === 0) { label = 'En attente'; color = 'text-gray-600'; icon = '⏳'; }
+              else if (relation > 0) { label = 'Non validé'; color = 'text-red-500'; icon = '❌'; }
+              else { label = 'À venir'; color = 'text-gray-400'; icon = '…'; }
             }
           }
 
           else if (item.category === 'weekly') {
-            const entry = item.history.find((h) => isSameDay(h.date, today));
-
-            if (entry?.status === 'completed') {
-              label = 'En cours (validé aujourd’hui)';
-              color = 'text-yellow-500';
-              icon = '🟡';
-            } else if (entry) {
-              label = 'En cours (non validé aujourd’hui)';
-              color = 'text-orange-500';
-              icon = '🟠';
+            if (entry) {
+              if (entry.status === 'completed') { label = 'Validé aujourd’hui'; color = 'text-green-600'; icon = '✅'; }
+              else if (entry.status === 'skipped') { label = 'Non validé aujourd’hui'; color = 'text-orange-500'; icon = '🟠'; }
+              else if (entry.status === 'failed') { label = 'Échec (fin de cycle)'; color = 'text-red-500'; icon = '❌'; }
             } else {
-              label = 'Not completed';
-              color = 'text-red-500';
-              icon = '❌';
+              if (relation === 0) { label = 'En cours (à valider)'; color = 'text-gray-600'; icon = '⏳'; }
+              else if (relation > 0) { label = 'Non validé (jour passé)'; color = 'text-orange-500'; icon = '🟠'; }
+              else { label = 'À venir'; color = 'text-gray-400'; icon = '…'; }
             }
           }
-
-          else if (item.category === 'monthly') {
-            if (validated && isSameDay(validated, today)) {
+          // monthly → même logique que ton code existant
+                             else if (item.category === 'monthly') {
+            const created = new Date(item.createdAt);
+            const validated = item.lastValidated ? new Date(item.lastValidated) : null;
+            if (validated && sameLocalDay(validated, currentDate)) {
               const days = differenceInCalendarDays(validated, created);
               label = `Validé en ${days} jour${days > 1 ? 's' : ''}`;
               color = 'text-green-600';
               icon = '✅';
+            } else {
+              if (relation === 0) { label = 'En attente'; color = 'text-gray-600'; icon = '⏳'; }
+              else if (relation > 0) { label = 'Non validé'; color = 'text-red-500'; icon = '❌'; }
+              else { label = 'À venir'; color = 'text-gray-400'; icon = '…'; }
             }
           }
 
