@@ -1,15 +1,14 @@
 const Objective = require('./Models/objective');
 const { format, differenceInCalendarDays, addDays, subDays, set } = require('date-fns');
-const { zonedTimeToUtc } = require('date-fns-tz');
+const tz = require('date-fns-tz');
 
 // Utilise 23:59 heure locale Africa/Algiers
 function endOfDayLocal(date) {
-  return zonedTimeToUtc(
+  return tz.zonedTimeToUtc(
     set(date, { hours: 23, minutes: 59, seconds: 0, milliseconds: 0 }),
     'Africa/Algiers'
   );
 }
-
 function sameDay(d1, d2) {
   return format(d1, 'yyyy-MM-dd') === format(d2, 'yyyy-MM-dd');
 }
