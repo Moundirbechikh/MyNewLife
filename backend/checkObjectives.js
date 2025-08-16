@@ -3,12 +3,11 @@ const { format, differenceInCalendarDays, addDays, subDays, set } = require('dat
 import { zonedTimeToUtc, utcToZonedTime, formatInTimeZone } from 'date-fns-tz';
 
 
-// Utilise 23:59 heure locale Africa/Algiers
-function endOfDayLocal(date) {
-  return tz.zonedTimeToUtc(
-    set(date, { hours: 23, minutes: 59, seconds: 0, milliseconds: 0 }),
-    'Africa/Algiers'
-  );
+function endOfDayLocal(timezone) {
+  const now = new Date();
+  const endOfDay = new Date(now);
+  endOfDay.setHours(23, 59, 0, 0);
+  return zonedTimeToUtc(endOfDay, timezone);
 }
 function sameDay(d1, d2) {
   return format(d1, 'yyyy-MM-dd') === format(d2, 'yyyy-MM-dd');
