@@ -1,15 +1,16 @@
 const Objective = require('./Models/objective');
-const { format, differenceInCalendarDays, addDays, subDays, set } = require('date-fns');
-const { utcToZonedTime, zonedTimeToUtc, formatInTimeZone } = require('date-fns-tz');
+const { format, differenceInCalendarDays, addDays, subDays } = require('date-fns');
+const { formatInTimeZone } = require('date-fns-tz');
 
-
-
-function endOfDayLocal(timezone) {
-  const now = new Date();
-  const endOfDay = new Date(now);
+function endOfDayLocal(date, timeZone = 'Africa/Algiers') {
+  const endOfDay = new Date(date);
   endOfDay.setHours(23, 59, 0, 0);
-  return zonedTimeToUtc(endOfDay, timezone);
+  const iso = formatInTimeZone(endOfDay, timeZone, "yyyy-MM-dd'T'HH:mm:ssXXX");
+  const utcDate = new Date(iso);
+  console.log(`🕒 ${format(date, 'yyyy-MM-dd')} → 23:59 local = ${utcDate.toISOString()}`);
+  return utcDate;
 }
+
 function sameDay(d1, d2) {
   return format(d1, 'yyyy-MM-dd') === format(d2, 'yyyy-MM-dd');
 }
@@ -51,7 +52,6 @@ async function checkObjectives() {
   for (const obj of weeklyObjectives) {
     const daysPassed = differenceInCalendarDays(today, new Date(obj.startDate));
 
-    // Ajouter "skipped" pour les jours passés du cycle (<7) avant aujourd’hui
     const lastEntry = obj.history.length > 0 ? obj.history[obj.history.length - 1] : null;
     let lastDate = lastEntry ? new Date(lastEntry.date) : obj.startDate;
     let checkDate = addDays(lastDate, 1);
@@ -83,7 +83,7 @@ async function checkObjectives() {
     await obj.save();
   }
 
-  console.log('✅ Vérification des objectifs terminée (23:59 local, pas de failed anticipé)');
+  console.log('✅ Vérification des objectifs terminée (23:59 local → UTC)');
 }
 
 module.exports = checkObjectives;
