@@ -1,6 +1,7 @@
 const Objective = require('./Models/objective');
 const { format, differenceInCalendarDays, addDays, subDays, set } = require('date-fns');
-const tz = require('date-fns-tz');
+import { zonedTimeToUtc, utcToZonedTime, formatInTimeZone } from 'date-fns-tz';
+
 
 // Utilise 23:59 heure locale Africa/Algiers
 function endOfDayLocal(date) {
