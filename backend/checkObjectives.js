@@ -1,14 +1,19 @@
 const Objective = require('./Models/objective');
-const { format, differenceInCalendarDays, addDays, subDays } = require('date-fns');
-const { formatInTimeZone } = require('date-fns-tz');
+const { format, differenceInCalendarDays, addDays, subDays, set } = require('date-fns');
+const { utcToZonedTime, formatInTimeZone } = require('date-fns-tz');
 
-function endOfDayLocal(date, timeZone = 'Africa/Algiers') {
+// ✅ Correction : recrée zonedTimeToUtc manuellement
+function zonedTimeToUtc(localDate, timeZone) {
+  const zoned = utcToZonedTime(localDate, timeZone);
+  const offsetMs = localDate.getTime() - zoned.getTime();
+  return new Date(localDate.getTime() - offsetMs);
+}
+
+// ✅ Ta fonction inchangée, mais corrigée
+function endOfDayLocal(date, timezone = 'Africa/Algiers') {
   const endOfDay = new Date(date);
   endOfDay.setHours(23, 59, 0, 0);
-  const iso = formatInTimeZone(endOfDay, timeZone, "yyyy-MM-dd'T'HH:mm:ssXXX");
-  const utcDate = new Date(iso);
-  console.log(`🕒 ${format(date, 'yyyy-MM-dd')} → 23:59 local = ${utcDate.toISOString()}`);
-  return utcDate;
+  return zonedTimeToUtc(endOfDay, timezone);
 }
 
 function sameDay(d1, d2) {
@@ -26,7 +31,6 @@ async function checkObjectives() {
     const lastEntry = obj.history.length > 0 ? obj.history[obj.history.length - 1] : null;
     const lastDate = lastEntry ? new Date(lastEntry.date) : subDays(today, 1);
 
-    // Remplir les jours manquants AVANT aujourd’hui
     let checkDate = addDays(lastDate, 1);
     while (differenceInCalendarDays(today, checkDate) > 0) {
       const exists = obj.history.some(e => sameDay(new Date(e.date), checkDate));
@@ -39,7 +43,6 @@ async function checkObjectives() {
       checkDate = addDays(checkDate, 1);
     }
 
-    // Reset completed si nouveau jour
     if (format(obj.updatedAt, 'yyyy-MM-dd') !== todayStr) {
       obj.completed = false;
     }
@@ -49,6 +52,7 @@ async function checkObjectives() {
 
   // ===== WEEKLY =====
   const weeklyObjectives = await Objective.find({ category: 'weekly' });
+
   for (const obj of weeklyObjectives) {
     const daysPassed = differenceInCalendarDays(today, new Date(obj.startDate));
 
@@ -70,7 +74,6 @@ async function checkObjectives() {
       checkDate = addDays(checkDate, 1);
     }
 
-    // Reset après 7 jours
     if (daysPassed >= 7) {
       const status = obj.progress >= obj.requiredCompletions ? 'completed' : 'failed';
       obj.history.push({ date: endOfDayLocal(today), status });
@@ -83,7 +86,7 @@ async function checkObjectives() {
     await obj.save();
   }
 
-  console.log('✅ Vérification des objectifs terminée (23:59 local → UTC)');
+  console.log('✅ Vérification des objectifs terminée (23:59 local, logique conservée)');
 }
 
 module.exports = checkObjectives;
