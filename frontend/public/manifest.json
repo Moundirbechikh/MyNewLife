@@ -1,6 +1,6 @@
 {
-  "short_name": "New Me",
-  "name": "My New Life",
+  "short_name": "My New Life",
+  "name": "Create React App Sample",
   "icons": [
     {
       "src": "favicon.ico",
