@@ -26,10 +26,6 @@ app.get('/', (req, res) => {
   res.send(`
     <h1>🚀 Backend opérationnel</h1>
     <p>Endpoints disponibles :</p>
-    <ul>
-      <li><a href="/api/users">/api/users</a></li>
-      <li><a href="/api/objectives">/api/objectives</a></li>
-    </ul>
   `);
 });
 
